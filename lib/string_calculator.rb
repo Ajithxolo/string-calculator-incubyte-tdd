@@ -28,6 +28,11 @@ class StringCalculator
 
   def calculate_sum(numbers, delimiter)
     regex = /#{Regexp.escape(delimiter)}|\n/
-    numbers.split(regex).map(&:to_i).sum 
+    parsed_numbers = numbers.split(regex).map(&:to_i)
+    numbers = reject_large_numbers(parsed_numbers).sum
+  end
+
+  def reject_large_numbers(numbers)
+    numbers.reject { |num| num > 1000 }
   end
 end
