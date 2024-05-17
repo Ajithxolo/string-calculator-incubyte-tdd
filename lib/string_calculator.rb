@@ -7,7 +7,7 @@ class StringCalculator
   private
 
   def parse_input(numbers)
-    numbers.split(',').map(&:to_i)
+    numbers.split(/[\n,]/).map(&:to_i)
   end
 
   def calculate_sum(numbers)
