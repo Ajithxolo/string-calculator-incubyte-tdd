@@ -1,15 +1,15 @@
-class StringCalculator
-  class NegativeNumberError < StandardError
-    def initialize(numbers)
-      super("negative numbers are not allowed #{numbers.join(', ')}")
-    end
-  end
-
-  def add(numbers)
+require_relative './exceptions/negative_number_error'
+class StringCalculator  
+  def calculate(numbers, operation='')
     return 0 if numbers.empty?
     delimiter, numbers = parse_input(numbers)
     validate_negatives!(numbers)
-    calculate_sum(numbers, delimiter)
+    numbers = prepare_numbers(numbers, delimiter)
+    if operation == "*"
+      calculate_product(numbers)
+    else
+      calculate_sum(numbers)
+    end
   end
 
   private
@@ -27,13 +27,22 @@ class StringCalculator
     raise NegativeNumberError, negative_numbers if negative_numbers.any?
   end
 
-  def calculate_sum(numbers, delimiter)
-    regex = /#{Regexp.escape(delimiter)}|\n/
-    parsed_numbers = numbers.split(regex).map(&:to_i)
-    numbers = reject_large_numbers(parsed_numbers).sum
+  def calculate_sum(numbers)
+    numbers.sum
   end
 
   def reject_large_numbers(numbers)
     numbers.reject { |num| num > 1000 }
   end
+
+  def calculate_product(numbers)
+    numbers.inject(:*)
+  end
+
+  def prepare_numbers(numbers, delimiter)
+    regex = /#{Regexp.escape(delimiter)}|\n/
+    parsed_numbers = numbers.split(regex).map(&:to_i)
+    reject_large_numbers(parsed_numbers)
+  end
+     
 end
